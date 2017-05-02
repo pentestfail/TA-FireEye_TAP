@@ -1,0 +1,157 @@
+<dashboard hideEdit="true">
+  <label>TAP Status</label>
+  <description>Provides overview of alert &amp; incident status in TAP.</description>
+  <search id="tap_alerts">
+    <query>`tap-alerts("*","*","*","*","*")`</query>
+    <earliest>0</earliest>
+    <latest></latest>
+    <sampleRatio>1</sampleRatio>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <search id="tap_incidents">
+    <query>`tap-incidents("*","*","*","*")`</query>
+    <earliest>0</earliest>
+    <latest></latest>
+    <sampleRatio>1</sampleRatio>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <row>
+    <panel>
+      <single>
+        <search base="tap_alerts">
+          <query>| timechart count AS total | append [search `tap-alerts("Open","*","*","*","*")` | stats count AS total]</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="height">125</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x65a637","0xd93f3c"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">none</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">OPEN ALERTS</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search base="tap_incidents">
+          <query>| timechart count AS total | append [search `tap-incidents(*,*,*,"no")` | stats count AS total]</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="height">125</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x65a637","0xd93f3c"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">none</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">OPEN INCIDENTS</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top Alerts (7days)</title>
+      <chart>
+        <search>
+          <query>`tap-alerts(*,*,*,*,*)` | top message</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="height">200</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Incidents by Status</title>
+      <table>
+        <search base="tap_incidents">
+          <query>|  top closed,status | fieldformat percent=tostring(round(percent))+"%" | sort closed</query>
+          <refresh>30s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">50</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Open Alerts</title>
+      <table>
+        <search>
+          <query>`tap-alerts("Open", "*", "*", "*", "*")` | table id, tap_environment, tap_instance, displayId, createDate, triggerId, message, state, suppressed, alertType, risk, severity, tags | sort - displayId</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">true</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <format type="color" field="state">
+          <colorPalette type="map">{"Closed":#65A637,"Open":#D93F3C}</colorPalette>
+        </format>
+        <format type="color" field="suppressed">
+          <colorPalette type="map">{"Yes":#F7BC38}</colorPalette>
+        </format>
+        <format type="color" field="risk">
+          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440,"Critical":#D93F3C}</colorPalette>
+        </format>
+        <format type="color" field="severity">
+          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440}</colorPalette>
+        </format>
+        <drilldown>
+          <link target="_blank">https://$row.tap_environment$.fireeye.com/tap/id/$row.tap_instance$/alerts/$row.id$/details</link>
+        </drilldown>
+        <fields>["displayId","createDate","triggerId","message","state","suppressed","alertType","risk","severity","tags"]</fields>
+      </table>
+    </panel>
+  </row>
+</dashboard>
