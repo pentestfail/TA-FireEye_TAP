@@ -1,5 +1,37 @@
 <nav search_view="search" color="#898989">
-<view name="inputs" default="true" />
-<view name="configuration"/>
+
+
+
+<view name="tap_status" default="true" />
+
+
+
+<view name="tap_alerts" />
+
+
+
+<view name="tap_incidents" />
+
+
+
 <view name="search" label="Search"/>
+
+
+
+<collection label="Setup">
+
+
+
+	<view name="inputs" />
+
+
+
+	<view name="configuration"/>
+
+
+
+</collection>
+
+
+
 </nav>

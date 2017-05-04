@@ -1,6 +1,11 @@
 <form hideEdit="true">
   <label>TAP Alerts</label>
   <description>Provides overview &amp; simple filtering of TAP alerting.</description>
+  <search id="tap_alerts">
+    <query>`tap-alerts(*,*,*,*,*)`</query>
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="time" searchWhenChanged="true">
       <label>Time</label>
@@ -10,11 +15,6 @@
       </default>
     </input>
   </fieldset>
-  <search id="tap_alerts">
-    <query>`tap-alerts(*,*,*,*,*)`</query>
-    <earliest>$time.earliest$</earliest>
-    <latest>$time.latest$</latest>
-  </search>
   <row>
     <panel>
       <title>Open Alerts</title>
@@ -27,7 +27,7 @@
         <option name="drilldown">none</option>
         <option name="height">125</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x65a637","0xd93f3c"]</option>
+        <option name="rangeColors">["0x71A654","0xD82435"]</option>
         <option name="rangeValues">[0]</option>
         <option name="refresh.display">none</option>
         <option name="showSparkline">1</option>
@@ -70,7 +70,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
-        <option name="charting.fieldColors">{"Low": 0x6A5C9E,"Medium": 0xF7BC38,"High": 0xED8440,"Critical": 0xD93F3C}</option>
+        <option name="charting.fieldColors">{"Low": 0x826AAF,"Medium": 0xFDB913,"High": 0xF58229,"Critical": 0xD82435}</option>
       </chart>
     </panel>
     <panel>
@@ -103,7 +103,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
-        <option name="charting.fieldColors">{"customer_rule": 0x6A5C9E,"fireeye_rule": 0xD93F3C}</option>
+        <option name="charting.fieldColors">{"customer_rule": 0x826AAF,"fireeye_rule": 0xD82435}</option>
       </chart>
     </panel>
   </row>
@@ -138,7 +138,7 @@
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">none</option>
         <option name="height">175</option>
-        <option name="charting.fieldColors">{"count": 0xD93F3C}</option>
+        <option name="charting.fieldColors">{"count": 0xD82435}</option>
       </chart>
     </panel>
   </row>
@@ -202,7 +202,7 @@
       </input>
       <table>
         <search>
-          <query>`tap-alerts($state$, $alertType$, $risk$, $severity$, $suppressed$)` | table id, tap_environment, tap_instance, displayId, createDate, triggerId, message, state, suppressed, alertType, risk, severity, tags | sort - displayId</query>
+          <query>`tap-alerts($state$, $alertType$, $risk$, $severity$, $suppressed$)` | table id, tap_environment, tap_instance, displayId, createDate, triggerId, message, state, suppressed, alertType, risk, severity, tags{} | sort - displayId</query>
           <earliest>$time.earliest$</earliest>
           <latest>$time.latest$</latest>
         </search>
@@ -214,21 +214,21 @@
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
         <format type="color" field="state">
-          <colorPalette type="map">{"Closed":#65A637,"Open":#D93F3C}</colorPalette>
+          <colorPalette type="map">{"Closed":#71A654,"Open":#D82435}</colorPalette>
         </format>
         <format type="color" field="suppressed">
-          <colorPalette type="map">{"Yes":#F7BC38}</colorPalette>
+          <colorPalette type="map">{"true":#F7BC38}</colorPalette>
         </format>
         <format type="color" field="risk">
-          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440,"Critical":#D93F3C}</colorPalette>
+          <colorPalette type="map">{"Low":#826AAF,"Medium":#FDB913,"High":#F58229,"Critical":#D82435}</colorPalette>
         </format>
         <format type="color" field="severity">
-          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440}</colorPalette>
+          <colorPalette type="map">{"Low":#826AAF,"Medium":#FDB913,"High":#F58229,"Critical":#D82435}</colorPalette>
         </format>
+        <fields>["displayId","createDate","triggerId","message","state","suppressed","alertType","risk","severity","tags{}"]</fields>
         <drilldown>
           <link target="_blank">https://$row.tap_environment$.fireeye.com/tap/id/$row.tap_instance$/alerts/$row.id$/details</link>
         </drilldown>
-        <fields>["displayId","createDate","triggerId","message","state","suppressed","alertType","risk","severity","tags"]</fields>
       </table>
     </panel>
   </row>

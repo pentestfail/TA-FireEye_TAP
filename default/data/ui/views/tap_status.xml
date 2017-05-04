@@ -28,7 +28,7 @@
         <option name="drilldown">none</option>
         <option name="height">125</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x65a637","0xd93f3c"]</option>
+        <option name="rangeColors">["0x71A654","0xD82435"]</option>
         <option name="rangeValues">[0]</option>
         <option name="refresh.display">none</option>
         <option name="showSparkline">1</option>
@@ -51,7 +51,7 @@
         <option name="drilldown">none</option>
         <option name="height">125</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x65a637","0xd93f3c"]</option>
+        <option name="rangeColors">["0x71A654","0xD82435"]</option>
         <option name="rangeValues">[0]</option>
         <option name="refresh.display">none</option>
         <option name="showSparkline">1</option>
@@ -106,8 +106,6 @@
       <table>
         <search base="tap_incidents">
           <query>|  top closed,status | fieldformat percent=tostring(round(percent))+"%" | sort closed</query>
-          <refresh>30s</refresh>
-          <refreshType>delay</refreshType>
         </search>
         <option name="count">50</option>
         <option name="dataOverlayMode">none</option>
@@ -116,6 +114,12 @@
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
+        <format type="color" field="closed">
+          <colorPalette type="map">{"Yes":#71A654,"No":#D82435}</colorPalette>
+        </format>
+        <format type="color" field="status">
+          <colorPalette type="map">{"Declared":#FDB913,"Scoped":#FAA634,"Contained":#DC662D,"Recovered":#8BC751,"Improved":#71A654}</colorPalette>
+        </format>
       </table>
     </panel>
   </row>
@@ -124,7 +128,7 @@
       <title>Open Alerts</title>
       <table>
         <search>
-          <query>`tap-alerts("Open", "*", "*", "*", "*")` | table id, tap_environment, tap_instance, displayId, createDate, triggerId, message, state, suppressed, alertType, risk, severity, tags | sort - displayId</query>
+          <query>`tap-alerts("Open", "*", "*", "*", "*")` | table id, tap_environment, tap_instance, displayId, createDate, triggerId, message, state, suppressed, alertType, risk, severity, tags{} | sort - displayId</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
@@ -136,21 +140,21 @@
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
         <format type="color" field="state">
-          <colorPalette type="map">{"Closed":#65A637,"Open":#D93F3C}</colorPalette>
+          <colorPalette type="map">{"Closed":#71A654,"Open":#D82435}</colorPalette>
         </format>
         <format type="color" field="suppressed">
-          <colorPalette type="map">{"Yes":#F7BC38}</colorPalette>
+          <colorPalette type="map">{"true":#FDB913}</colorPalette>
         </format>
         <format type="color" field="risk">
-          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440,"Critical":#D93F3C}</colorPalette>
+          <colorPalette type="map">{"Low":#826AAF,"Medium":#FDB913,"High":#F58229,"Critical":#D82435}</colorPalette>
         </format>
         <format type="color" field="severity">
-          <colorPalette type="map">{"Low":#6A5C9E,"Medium":#F7BC38,"High":#ED8440}</colorPalette>
+          <colorPalette type="map">{"Low":#826AAF,"Medium":#FDB913,"High":#F58229,"Critical":#D82435}</colorPalette>
         </format>
+        <fields>["displayId","createDate","state","triggerId","message","suppressed","alertType","risk","severity","tags{}"]</fields>
         <drilldown>
           <link target="_blank">https://$row.tap_environment$.fireeye.com/tap/id/$row.tap_instance$/alerts/$row.id$/details</link>
         </drilldown>
-        <fields>["displayId","createDate","triggerId","message","state","suppressed","alertType","risk","severity","tags"]</fields>
       </table>
     </panel>
   </row>
